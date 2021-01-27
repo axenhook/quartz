@@ -228,6 +228,7 @@ int register_thread(thread_manager_t* thread_manager, pthread_t pthread, pid_t t
     }
     thread->cpu_id = cpu_id;
     thread->cpu_speed_mhz = cpu_speed_mhz();
+    DBG_LOG(INFO, "thread id [%d] cpu_speed_mhz: %d MHz\n", thread->tid, thread->cpu_speed_mhz);
 #ifdef PAPI_SUPPORT
     cpu_model_t *cpu = thread_manager->virtual_topology->virtual_nodes[virtual_node_id].dram_node->cpu_model;
     if (setup_events_thread_self(thread, cpu->pmc_events.native_events) != 0) {

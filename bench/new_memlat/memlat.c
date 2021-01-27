@@ -91,6 +91,7 @@ void* worker(void* arg)
     printf("Error: %3.1f%%\n", (double)(abs(latency_model.read_latency - latency_ns)*100) / (double)latency_model.read_latency);
     printf("target NVM accesses: %ld\n", g_nelems);
     printf("detected HW latency: %ld ns\n", nvm_hw_latency);
+    printf("cpu_speed_mhz: %d MHz\n", thread_self()->cpu_speed_mhz);
     printf("detected HW latency: %ld cycles (detected_hw_lat making use of cpu_speed_mhz)\n", detected_hw_lat);
     printf("expected CPU stalls: %ld cycles (target_nvm_accesses * detected_hw_lat)\n", exp_stalls);
     printf("actual CPU stalls: %ld cycles\n", thread_self()->stall_cycles);

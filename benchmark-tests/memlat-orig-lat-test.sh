@@ -15,6 +15,8 @@
 
 #awk '($1~/physical_nodes/) {print;}'  nvmemul.ini
 
+set -x
+
 num_sockets=$(cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l)
 if [ $num_sockets -eq 1 ]; 
 then

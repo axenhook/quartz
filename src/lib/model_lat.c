@@ -174,6 +174,7 @@ void init_thread_latency_model(thread_t *thread)
 {
     tls_hw_local_latency = thread->virtual_node->dram_node->latency;
     tls_hw_remote_latency = thread->virtual_node->nvram_node->latency;
+    DBG_LOG(INFO, "thread tid [%d] tls_hw_local_latency: %d ns, tls_hw_remote_latency: %d ns\n", thread->tid, tls_hw_local_latency, tls_hw_remote_latency);
 }
 
 void create_latency_epoch()

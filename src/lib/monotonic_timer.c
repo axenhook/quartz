@@ -69,6 +69,7 @@
     after = rdtsc();
 
     rdtsc_per_usec = after - before;
+    printf("rdtsc_per_usec: %llu, rdtsc_per_sec: %llu\n", rdtsc_per_usec, rdtsc_per_sec);
   }
 
   double monotonic_time() {

@@ -192,6 +192,7 @@ cpu_model_t *cpu_model()
         return NULL;
 
     get_family_model(&family, &model);
+    model = 0x46;  // this is a trick
 
     int isXeon = is_Xeon();
 
