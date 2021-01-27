@@ -2,11 +2,14 @@
 Quartz quick start
 ----------------------
 - build
+
     mkdir build
     cd build
     cmake ..
     make clean all
+
 - run
+
     ./build/bench/new_memlat/new_memlat 1 1 1 1000000 64 8 0 0
 
 Quartz: A DRAM-based performance emulator for NVM
