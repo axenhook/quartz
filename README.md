@@ -10,6 +10,7 @@ Quartz quick start
 
 #### run
 
+    echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
     ./build/bench/new_memlat/new_memlat 1 1 1 1000000 64 8 0 0
 
 Quartz: A DRAM-based performance emulator for NVM
