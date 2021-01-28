@@ -233,12 +233,12 @@ void create_latency_epoch()
     }
 #endif
 
-    delay_cycles = stall_cycles * ((double)(target_latency - hw_latency) / ((double) hw_latency));
+    delay_cycles = stall_cycles * ((double)(target_latency - hw_latency) / ((double) hw_latency)) * latency_model.nvm_hitrate / 100;
 
     stop = hrtime_cycles();
     tls_overhead += stop - start;
 
-    DBG_LOG(DEBUG, "overhead cycles: %lu; immediate overhead %lu; stall cycles: %lu; delay cycles: %lu\n", tls_overhead, stop - start, stall_cycles, delay_cycles);
+    DBG_LOG(DEBUG, "overhead cycles: %lu; immediate overhead %lu; stall cycles: %lu; delay cycles: %lu; nvm hitrate: %d\n", tls_overhead, stop - start, stall_cycles, delay_cycles, latency_model.nvm_hitrate);
 
     if (delay_cycles > tls_overhead) {
     	delay_cycles -= tls_overhead;
