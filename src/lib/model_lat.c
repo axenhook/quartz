@@ -117,6 +117,8 @@ int init_latency_model(config_t* cfg, cpu_model_t* cpu, virtual_topology_t* virt
 
     __cconfig_lookup_int(cfg, "latency.read", &latency_model.read_latency);
     __cconfig_lookup_int(cfg, "latency.write", &latency_model.write_latency);
+    latency_model.nvm_hitrate = 100; // if nvm_hitrate not configed
+    __cconfig_lookup_int(cfg, "latency.nvm_hitrate", &latency_model.nvm_hitrate);
 
     if (check_target_latency_against_hw_latency(virtual_topology) < 0) {
         return E_INVAL;

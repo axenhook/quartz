@@ -27,9 +27,10 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #define MIN_EPOCH_DURATION_US 1
 
 typedef struct {
-	int enabled;
+    int enabled;
     int read_latency;
     int write_latency;
+    int nvm_hitrate;   // nvm hit rate %
     int inject_delay;
 #ifdef CALIBRATION_SUPPORT
     int calibration;
