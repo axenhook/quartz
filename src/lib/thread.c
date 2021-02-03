@@ -491,17 +491,17 @@ static int reached_max_epoch_duration(thread_t* thread) {
 }
 
 void block_new_epoch() {
-    sigset_t set;
-    sigemptyset(&set);
-    sigaddset(&set, SIGUSR1);
-    pthread_sigmask(SIG_BLOCK, &set, NULL);
+    //sigset_t set;
+    //sigemptyset(&set);
+    //sigaddset(&set, SIGUSR1);
+    //pthread_sigmask(SIG_BLOCK, &set, NULL);
 }
 
 void unblock_new_epoch() {
-    sigset_t set;
-    sigemptyset(&set);
-    sigaddset(&set, SIGUSR1);
-    pthread_sigmask(SIG_UNBLOCK, &set, NULL);
+    //sigset_t set;
+    //sigemptyset(&set);
+    //sigaddset(&set, SIGUSR1);
+    //pthread_sigmask(SIG_UNBLOCK, &set, NULL);
 }
 
 thread_manager_t* get_thread_manager() {
