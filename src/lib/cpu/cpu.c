@@ -183,6 +183,8 @@ int is_Intel()
     }
 }
 
+pthread_mutex_t *cpu_mutex = NULL;
+
 cpu_model_t *cpu_model()
 {
     int i, family, model;
@@ -233,6 +235,18 @@ cpu_model_t *cpu_model()
     // complete the model with some runtime information
     cpu_model->llc_size_bytes = cpu_llc_size_bytes();
     //    cpu_model->speed_mhz = cpu_speed_mhz();
+
+    int cpu_num = system_num_cpus();
+    cpu_mutex = malloc(sizeof(pthread_mutex_t) * cpu_num);
+    if (cpu_mutex == NULL)
+    {
+        return NULL;
+    }
+
+    for (i = 0; i < cpu_num; i++)
+    {
+        pthread_mutex_init(&cpu_mutex[i], NULL);
+    }
 
     return cpu_model;
 }

@@ -22,7 +22,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #include "topology.h"
 #include "cpu/cpu.h"
 #include "stat.h"
-
+#include "interpose.h"
 
 struct thread_manager_s; // opaque
 

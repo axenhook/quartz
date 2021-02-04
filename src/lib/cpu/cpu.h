@@ -65,4 +65,7 @@ typedef struct cpu_model_s {
 cpu_model_t* cpu_model();
 int cpu_speed_mhz();
 
+#include <pthread.h>
+extern pthread_mutex_t *cpu_mutex;
+
 #endif /* __CPU_H */

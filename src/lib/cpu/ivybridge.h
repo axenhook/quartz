@@ -63,10 +63,13 @@ DECLARE_CLEAR_PMC(ivybridge, ldm_stall_cycles)
 
 DECLARE_READ_PMC(ivybridge, ldm_stall_cycles)
 {
+   int cpu_id = thread_self()->cpu_id;
+   __lib_pthread_mutex_lock(&cpu_mutex[cpu_id]);
    uint64_t l2_pending_diff  = READ_MY_HW_EVENT_DIFF(0);
    uint64_t llc_hit_diff     = READ_MY_HW_EVENT_DIFF(1);
    uint64_t remote_dram_diff = READ_MY_HW_EVENT_DIFF(2);
    uint64_t local_dram_diff  = READ_MY_HW_EVENT_DIFF(3);
+   __lib_pthread_mutex_unlock(&cpu_mutex[cpu_id]);
 
    DBG_LOG(DEBUG, "read stall L2 cycles diff %lu; llc_hit %lu; cycles diff remote_dram %lu; local_dram %lu\n",
 		   l2_pending_diff, llc_hit_diff, remote_dram_diff, local_dram_diff);
@@ -100,10 +103,13 @@ DECLARE_CLEAR_PMC(ivybridge, remote_dram)
 
 DECLARE_READ_PMC(ivybridge, remote_dram)
 {
+   int cpu_id = thread_self()->cpu_id;
+   __lib_pthread_mutex_lock(&cpu_mutex[cpu_id]);
    uint64_t l2_pending_diff  = READ_MY_HW_EVENT_DIFF(0);
    uint64_t llc_hit_diff     = READ_MY_HW_EVENT_DIFF(1);
    uint64_t remote_dram_diff = READ_MY_HW_EVENT_DIFF(2);
    uint64_t local_dram_diff  = READ_MY_HW_EVENT_DIFF(3);
+   __lib_pthread_mutex_unlock(&cpu_mutex[cpu_id]);
 
    DBG_LOG(DEBUG, "read stall L2 cycles diff %lu; llc_hit %lu; cycles diff remote_dram %lu; local_dram %lu\n",
 		   l2_pending_diff, llc_hit_diff, remote_dram_diff, local_dram_diff);

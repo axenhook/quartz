@@ -54,9 +54,12 @@ DECLARE_CLEAR_PMC(sandybridge, ldm_stall_cycles)
 DECLARE_READ_PMC(sandybridge, ldm_stall_cycles)
 {
 	//return 0;
+   int cpu_id = thread_self()->cpu_id;
+   __lib_pthread_mutex_lock(&cpu_mutex[cpu_id]);
    uint64_t cycle_activity_stalls_l2_pending_diff = READ_MY_HW_EVENT_DIFF(0);
    uint64_t mem_load_uops_misc_retired_llc_miss_diff = READ_MY_HW_EVENT_DIFF(1);
    uint64_t mem_load_uops_retired_l3_hit_diff = READ_MY_HW_EVENT_DIFF(2);
+   __lib_pthread_mutex_unlock(&cpu_mutex[cpu_id]);
 
    //return floor(cycle_activity_stalls_l2_pending_diff * (((double) (7*mem_load_uops_misc_retired_llc_miss_diff))/((double)(7*mem_load_uops_misc_retired_llc_miss_diff + mem_load_uops_retired_l3_hit_diff))));
    uint64_t uden = 7.0 * mem_load_uops_misc_retired_llc_miss_diff + mem_load_uops_retired_l3_hit_diff;

@@ -196,11 +196,14 @@ uint64_t read_pmc_hw_event_diff(pmc_hw_event_t* event)
 {
     int cpu_id = thread_self()->cpu_id;
     uint64_t cur_val = read_pmc_hw_event_cur(event);
+    //printf("cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", cpu_id, event->hw_cntr_id, event->last_val[cpu_id], cur_val);
     uint64_t last_val = event->last_val[cpu_id];
     //if (cur_val < last_val && (event->hw_cntr_id == 0)) {
     if (cur_val < last_val) {
+        printf("_________________________cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", cpu_id, event->hw_cntr_id, event->last_val[cpu_id], cur_val);
         event->last_val[cpu_id] = cur_val;
-        return (cur_val + (RDPMC_MAX_VALUE - last_val));
+        //return (cur_val + (RDPMC_MAX_VALUE - last_val));
+	return 0;
     }
     event->last_val[cpu_id] = cur_val;
     return cur_val - last_val;
