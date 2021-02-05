@@ -49,8 +49,8 @@ struct file_operations pmc_fops = {
 static const char* module_name = "nvmemul";
 static int mod_major = 0;
 static const int NVMEMUL_MAJOR = 0;
-const const int PERFCTR0 = 0xc1;
-const const int PERFEVENTSEL0 = 0x186;
+const int PERFCTR0 = 0xc1;
+const int PERFEVENTSEL0 = 0x186;
 
 
 void pmc_set_pce_bit(void* arg) 

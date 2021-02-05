@@ -195,7 +195,7 @@ uint64_t read_pmc_hw_event_cur(pmc_hw_event_t* event)
     return rdpmc(event->hw_cntr_id);
 }
 
-int get_thread_cpu_id(void)
+unsigned long long get_thread_cpu_id(void)
 {
     cpu_set_t mask;
     unsigned long long bitmask = 0;
@@ -214,20 +214,21 @@ int get_thread_cpu_id(void)
         //    return i;
         }
     }
-printf("cpu_mask: 0x%llx\n", bitmask);
 
-    return -1;
+    //printf("cpu_mask: 0x%llx\n", bitmask);
+
+    return bitmask;
 }
 
 uint64_t read_pmc_hw_event_diff(pmc_hw_event_t* event)
 {
     int cpu_id = thread_self()->cpu_id;
     uint64_t cur_val = read_pmc_hw_event_cur(event);
-    //printf("cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", cpu_id, event->hw_cntr_id, event->last_val[cpu_id], cur_val);
+//    printf("thread: 0x%lx, real_cpu_id: 0x%llx, cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", pthread_self(), get_thread_cpu_id(), cpu_id, event->hw_cntr_id, (unsigned long long)event->last_val[cpu_id], (unsigned long long)cur_val);
     uint64_t last_val = event->last_val[cpu_id];
     //if (cur_val < last_val && (event->hw_cntr_id == 0)) {
     if (cur_val < last_val) {
-        printf("_________________________real_cpu_id: %d, cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", get_thread_cpu_id(), cpu_id, event->hw_cntr_id, event->last_val[cpu_id], cur_val);
+        printf("_________________________thread: 0x%lx, real_cpu_id: 0x%llx, cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", pthread_self(), get_thread_cpu_id(), cpu_id, event->hw_cntr_id, (unsigned long long)event->last_val[cpu_id], (unsigned long long)cur_val);
         event->last_val[cpu_id] = cur_val;
         //return (cur_val + (RDPMC_MAX_VALUE - last_val));
 	return 0;
