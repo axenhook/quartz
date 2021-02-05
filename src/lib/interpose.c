@@ -39,6 +39,8 @@ int (*__lib_pthread_mutex_trylock)(pthread_mutex_t *mutex);
 int (*__lib_pthread_mutex_unlock)(pthread_mutex_t *mutex);
 int (*__lib_pthread_detach)(pthread_t thread);
 
+int (*__lib_pthread_barrier_wait)(pthread_barrier_t *barrier);
+
 extern inline hrtime_t hrtime_cycles(void);
 extern inline int cycles_to_us(cpu_model_t* cpu, hrtime_t cycles);
 
@@ -52,10 +54,11 @@ int init_interposition()
     __lib_pthread_mutex_trylock = dlsym(RTLD_NEXT, "pthread_mutex_trylock");
     __lib_pthread_mutex_unlock = dlsym(RTLD_NEXT, "pthread_mutex_unlock");
     __lib_pthread_detach = dlsym(RTLD_NEXT, "pthread_detach");
+    __lib_pthread_barrier_wait = dlsym(RTLD_NEXT, "pthread_barrier_wait");
 
     if (__lib_pthread_mutex_lock == NULL || __lib_pthread_mutex_unlock == NULL ||
     	    __lib_pthread_create == NULL || __lib_pthread_mutex_trylock == NULL ||
-    	    __lib_pthread_detach == NULL) {
+    	    __lib_pthread_detach == NULL || __lib_pthread_barrier_wait == NULL) {
     	error = dlerror();
     	DBG_LOG(ERROR, "Interposition failed: %s\n", error != NULL ? error : "unknown reason");
     	return E_ERROR;
@@ -178,6 +181,23 @@ int pthread_mutex_unlock(pthread_mutex_t *mutex)
     if (__lib_pthread_mutex_unlock == NULL)
         init_interposition();
     err = __lib_pthread_mutex_unlock(mutex);
+
+    return err;
+}
+
+int pthread_barrier_wait(pthread_barrier_t *barrier)
+{
+    int err;
+
+    if (latency_model.enabled) {
+        if (reached_min_epoch_duration(thread_self())) {
+            create_latency_epoch();
+        }
+    }
+
+    if (__lib_pthread_barrier_wait == NULL)
+        init_interposition();
+    err = __lib_pthread_barrier_wait(barrier);
 
     return err;
 }
