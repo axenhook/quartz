@@ -11,7 +11,10 @@ should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 ***************************************************************************/
+#define _GNU_SOURCE
 #include <stdlib.h>
+#include <unistd.h>
+#include <sched.h>
 #include "cpu/pmc.h"
 #include "dev.h"
 #include "error.h"
@@ -192,6 +195,30 @@ uint64_t read_pmc_hw_event_cur(pmc_hw_event_t* event)
     return rdpmc(event->hw_cntr_id);
 }
 
+int get_thread_cpu_id(void)
+{
+    cpu_set_t mask;
+    unsigned long long bitmask = 0;
+    CPU_ZERO(&mask);
+    if (sched_getaffinity(0, sizeof(cpu_set_t), &mask) == -1)
+    {
+        return -1;
+    }
+    int cpu_num = system_num_cpus();
+    int i;
+    for (i = 0; i < cpu_num; i++)
+    {
+        if (CPU_ISSET(i, &mask))
+        {
+            bitmask |= ((unsigned long long)1 << i);
+        //    return i;
+        }
+    }
+printf("cpu_mask: 0x%llx\n", bitmask);
+
+    return -1;
+}
+
 uint64_t read_pmc_hw_event_diff(pmc_hw_event_t* event)
 {
     int cpu_id = thread_self()->cpu_id;
@@ -200,7 +227,7 @@ uint64_t read_pmc_hw_event_diff(pmc_hw_event_t* event)
     uint64_t last_val = event->last_val[cpu_id];
     //if (cur_val < last_val && (event->hw_cntr_id == 0)) {
     if (cur_val < last_val) {
-        printf("_________________________cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", cpu_id, event->hw_cntr_id, event->last_val[cpu_id], cur_val);
+        printf("_________________________real_cpu_id: %d, cpu_id: %d, hw_cntr_id: %d, last_val: %llu, cur_val: %llu\n", get_thread_cpu_id(), cpu_id, event->hw_cntr_id, event->last_val[cpu_id], cur_val);
         event->last_val[cpu_id] = cur_val;
         //return (cur_val + (RDPMC_MAX_VALUE - last_val));
 	return 0;

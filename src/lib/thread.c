@@ -11,9 +11,11 @@ should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 ***************************************************************************/
+#define _GNU_SOURCE
 #include <sys/syscall.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <sched.h>
 #include <signal.h>
 #include <stdlib.h>
 #include "cpu/cpu.h"
@@ -106,7 +108,7 @@ void partition_cpus_based_on_rank(int rank, int max_rank, int num_cpus,
         }
     }
 }
-
+#if 0
 int bind_thread_on_cpu(thread_manager_t* thread_manager, thread_t* thread, int virtual_node_id, int cpu_id)
 {
     thread->virtual_node = &thread_manager->virtual_topology->virtual_nodes[virtual_node_id];
@@ -121,6 +123,21 @@ int bind_thread_on_cpu(thread_manager_t* thread_manager, thread_t* thread, int v
     numa_bitmask_free(cpubind);
     return E_SUCCESS;
 }
+#else
+int bind_thread_on_cpu(thread_manager_t* thread_manager, thread_t* thread, int virtual_node_id, int cpu_id)
+{
+    thread->virtual_node = &thread_manager->virtual_topology->virtual_nodes[virtual_node_id];
+    DBG_LOG(INFO, "Binding thread tid [%d] pthread: 0x%lx on processor %d\n", thread->tid, thread->pthread, cpu_id);
+    cpu_set_t cpubind;
+    CPU_ZERO(&cpubind);
+    CPU_SET(cpu_id, &cpubind);
+    if (pthread_setaffinity_np(thread->pthread, sizeof(cpu_set_t), &cpubind) != 0) {
+        DBG_LOG(ERROR, "Cannot bind thread tid [%d] pthread: 0x%lx on processor %d\n", thread->tid, thread->pthread, cpu_id);
+        return E_ERROR;
+    }
+    return E_SUCCESS;
+}
+#endif
 
 int bind_thread_on_mem(thread_manager_t* thread_manager, thread_t* thread, int virtual_node_id, int cpu_id)
 {
