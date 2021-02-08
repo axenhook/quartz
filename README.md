@@ -15,8 +15,12 @@ Quartz quick start
 
 #### notes
 
-    1. support pthread mutex/barrier primitives, if there are other synchronization primitives, you should add them
-    2. the SIGUSR1 signal is registered for each thread and the SA_RESTART flag is carried. As a result, the execution of some functions may be inconsistent with the expected result(eg. returned in advance). please refer to manual. Note that the sleep function is returned in advance, which causes the sleep time to be inaccurate
+    1. support pthread mutex/barrier primitives, if there are other synchronization primitives 
+       in user's program, you should add them.
+    2. the SIGUSR1 signal is registered for each thread and the SA_RESTART flag is carried.
+       As a result, the execution of some functions may be inconsistent with the expected
+       result(eg. returned in advance). please refer to manual. Note that the sleep function
+       is returned in advance, which causes the sleep time to be inaccurate.
 
 Quartz: A DRAM-based performance emulator for NVM
 ----------------------
