@@ -13,6 +13,11 @@ Quartz quick start
     echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
     ./build/bench/new_memlat/new_memlat 1 1 1 1000000 64 8 0 0
 
+#### notes
+
+    1. support pthread mutex/barrier primitives, if there are other synchronization primitives, you should add them
+    2. the SIGUSR1 signal is registered for each thread and the SA_RESTART flag is carried. As a result, the execution of some functions may be inconsistent with the expected result(eg. returned in advance). please refer to manual. Note that the sleep function is returned in advance, which causes the sleep time to be inaccurate
+
 Quartz: A DRAM-based performance emulator for NVM
 ----------------------
 Quartz leverages features available in commodity hardware to emulate
